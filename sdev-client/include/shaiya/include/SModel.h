@@ -1,5 +1,5 @@
 #pragma once
-#include <include/shaiya/common.h>
+#include "include/shaiya/common.h"
 
 namespace shaiya
 {
@@ -8,24 +8,26 @@ namespace shaiya
     #pragma pack(push, 1)
     struct SModelTexture
     {
-        LPDIRECT3DVERTEXBUFFER9 vertexBuffer;  //0x00
-        LPDIRECT3DINDEXBUFFER9 indexBuffer;    //0x04
-        UINT32 numVertexBufferIndices;         //0x08
-        UINT32 numIndexBufferIndices;          //0x0C
-        UINT32 numVertices;                    //0x10
-        UINT32 numFaces;                       //0x14
+        LPDIRECT3DVERTEXBUFFER9 vertexBuffer;
+        LPDIRECT3DINDEXBUFFER9 indexBuffer;
+        UINT32 numVertexBufferIndices;  //0x08
+        UINT32 numIndexBufferIndices;   //0x0C
+        UINT32 numVertices;             //0x10
+        UINT32 numFaces;                //0x14
         PAD(4);
-        STexture* texture;                     //0x1C
+        STexture* texture;              //0x1C
         // 0x20
     };
     #pragma pack(pop)
+
+    static_assert(sizeof(SModelTexture) == 0x20);
 
     #pragma pack(push, 1)
     struct SModel
     {
         UINT32 numTextures;              //0x00
         SModelTexture* textures;         //0x04
-        Array<char, 256> fileName;       //0x08
+        CharArray<256> fileName;         //0x08
         D3DVECTOR center;                //0x108
         float distanceToCenter;          //0x114
         BoundingBox viewBox;             //0x118
@@ -40,4 +42,6 @@ namespace shaiya
         // 0x164
     };
     #pragma pack(pop)
+
+    static_assert(sizeof(SModel) == 0x164);
 }

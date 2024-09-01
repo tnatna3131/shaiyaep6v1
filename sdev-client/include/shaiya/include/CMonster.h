@@ -1,9 +1,9 @@
 #pragma once
-#include <include/shaiya/common.h>
+#include "include/shaiya/common.h"
 
 namespace shaiya
 {
-    struct CStaticText;
+    struct SStaticText;
 
     #pragma pack(push, 1)
     // 004185A0 ctor
@@ -20,8 +20,8 @@ namespace shaiya
         PAD(4);
         UINT32 maxHealth;       //0x54
         UINT32 health;          //0x58
-        D3DVECTOR nextPos;      //0x5C
-        D3DVECTOR nextDir;      //0x68
+        D3DVECTOR movePos;      //0x5C
+        D3DVECTOR moveDir;      //0x68
         UINT32 model;           //0x74
         PAD(36);
         ULONG targetId;         //0x9C
@@ -33,10 +33,12 @@ namespace shaiya
         UINT8 attackSpeed;      //0xB4
         UINT8 moveSpeed;        //0xB5
         PAD(66);
-        CStaticText* nameText;  //0xF8
+        SStaticText* nameText;  //0xF8
         long namePointX;        //0xFC
         PAD(52);
         // 0x134
     };
     #pragma pack(pop)
+
+    static_assert(sizeof(CMonster) == 0x134);
 }

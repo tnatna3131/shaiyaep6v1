@@ -1,27 +1,20 @@
 #include <ranges>
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-
-#include <include/main.h>
-#include <include/shaiya/packets/2300.h>
-#include <include/shaiya/include/CItem.h>
-#include <include/shaiya/include/CUser.h>
-#include <include/shaiya/include/ItemDuration.h>
-#include <include/shaiya/include/ItemInfo.h>
-#include <include/shaiya/include/MyShop.h>
-#include <include/shaiya/include/SConnection.h>
-#include <include/shaiya/include/ServerTime.h>
-#include <util/include/util.h>
+#include <shaiya/include/common/SConnection.h>
+#include <util/util.h>
+#include "include/main.h"
+#include "include/shaiya/include/CItem.h"
+#include "include/shaiya/include/CUser.h"
+#include "include/shaiya/include/ItemInfo.h"
+#include "include/shaiya/include/MyShop.h"
+#include "include/shaiya/include/network/game/outgoing/2300.h"
 using namespace shaiya;
 
 namespace packet_myshop
 {
     void send_item_list(CUser* user, MyShop* myShop)
     {
-        constexpr int packet_size_without_list = 3;
-
-        MyShopItemListOutgoing packet{};
-        packet.itemCount = 0;
+        MyShopItemListOutgoing outgoing{};
+        outgoing.itemCount = 0;
 
         const auto& market = std::ranges::views::zip(
             std::as_const(myShop->srcBag),
@@ -52,24 +45,15 @@ namespace packet_myshop
             item230B.count = item->count;
             item230B.quality = item->quality;
             item230B.gems = item->gems;
-
-#if defined SHAIYA_EP6_4_PT && defined SHAIYA_EP6_ITEM_DURATION
-            if (item->itemInfo->duration)
-            {
-                item230B.toDate = ServerTime::Add(item->makeTime, item->itemInfo->duration);
-                item230B.fromDate = item230B.toDate ? item->makeTime : 0;
-            }
-#endif
-
             item230B.craftName = item->craftName;
-            packet.itemList[packet.itemCount] = item230B;
+            outgoing.itemList[outgoing.itemCount] = item230B;
 
-            ++packet.itemCount;
+            ++outgoing.itemCount;
             ++slot;
         }
 
-        int length = packet_size_without_list + (packet.itemCount * sizeof(Item230B));
-        SConnection::Send(&user->connection, &packet, length);
+        int length = outgoing.size_without_list() + (outgoing.itemCount * sizeof(Item230B));
+        SConnection::Send(&user->connection, &outgoing, length);
     }
 }
 

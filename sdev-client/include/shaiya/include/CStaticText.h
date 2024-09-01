@@ -1,19 +1,36 @@
 #pragma once
-#include <include/shaiya/common.h>
+#include "include/shaiya/common.h"
 
 namespace shaiya
 {
     #pragma pack(push, 1)
-    struct CStaticText
+    struct SStaticText
     {
-        // D3DRTYPE_TEXTURE
-        LPDIRECT3DBASETEXTURE9 texture;  //0x00
-        D2D_SIZE_U size;                 //0x04
-        //
-
-        static CStaticText* Init(const char* text);
-        static void Draw(CStaticText* staticText, long x, long y, float extrusion, D3DCOLOR argb);
-        static long GetPointX(CStaticText* staticText);
+        LPDIRECT3DTEXTURE9 texture;
+        D2D_SIZE_U size;
+        // 0xC
     };
     #pragma pack(pop)
+
+    static_assert(sizeof(SStaticText) == 0xC);
+
+    #pragma pack(push, 1)
+    // 0x22B6DD0
+    struct CStaticText
+    {
+        LPDIRECT3DSURFACE9 unknown1;
+        LPDIRECT3DSURFACE9 unknown2;
+        LPDIRECT3DSURFACE9 unknown3;
+        LPDIRECT3DSURFACE9 unknown4;
+        // D3DFMT_X8R8G8B8
+        D3DFORMAT format;
+        // 0x14
+
+        static SStaticText* Create(const char* text);
+        static void Draw(SStaticText* staticText, long x, long y, float z, D3DCOLOR color);
+        static long GetTextWidth(const char* text);
+    };
+    #pragma pack(pop)
+
+    static_assert(sizeof(CStaticText) == 0x14);
 }

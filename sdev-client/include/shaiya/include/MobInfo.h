@@ -1,5 +1,6 @@
 #pragma once
-#include <include/shaiya/common.h>
+#include <shaiya/include/common/Attribute.h>
+#include "include/shaiya/common.h"
 
 namespace shaiya
 {
@@ -21,9 +22,11 @@ namespace shaiya
         PAD(3);
         UINT32 chaseDelay;    //0x1C
         UINT8 chaseRange;     //0x20
-        PAD(28);
+        PAD(31);
         BOOL isWings;         //0x40
         // 0x44
     };
     #pragma pack(pop)
+
+    static_assert(sizeof(MobInfo) == 0x44);
 }

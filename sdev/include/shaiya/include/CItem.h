@@ -1,7 +1,10 @@
 #pragma once
-#include <include/shaiya/common.h>
-#include <include/shaiya/include/SNode.h>
-#include <include/shaiya/include/SVector.h>
+#include <shaiya/include/common.h>
+#include <shaiya/include/common/CraftName.h>
+#include <shaiya/include/common/Gems.h>
+#include <shaiya/include/common/MakeType.h>
+#include <shaiya/include/common/SNode.h>
+#include "include/shaiya/include/SVector.h"
 
 namespace shaiya
 {
@@ -10,8 +13,8 @@ namespace shaiya
 
     enum struct ItemDropType : UINT8
     {
-        ByUser = 2,
-        ByDeath
+        User = 1,
+        Mob
     };
 
     #pragma pack(push, 1)
@@ -36,15 +39,17 @@ namespace shaiya
         CraftName craftName;       //0x4C
         PAD(3);
         ULONG makeTime;            //0x64
-        ItemMakeType makeType;     //0x68
+        MakeType makeType;         //0x68
         PAD(3);
-        DWORD enablePickTime;      //0x6C
-        ULONG enablePickCharId;    //0x70
+        DWORD enablePickTick;      //0x6C
+        ULONG enablePickId;        //0x70
         ULONG enablePickPartyId;   //0x74
         ItemDropType dropType;     //0x78
         PAD(3);
-        ULONG dropCharId;          //0x7C
-        PAD(4);
+        // user->id, mobId (e.g., 835)
+        ULONG dropId;              //0x7C
+        // type 26 (gold)
+        UINT32 dropMoney;          //0x80
         UINT16 craftStrength;      //0x84
         UINT16 craftDexterity;     //0x86
         UINT16 craftReaction;      //0x88
@@ -86,4 +91,6 @@ namespace shaiya
         static void ReGenerationCraftExpansion(CItem* item/*esi*/, BOOL compose);
     };
     #pragma pack(pop)
+
+    static_assert(sizeof(CItem) == 0xA0);
 }
